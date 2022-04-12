@@ -5,10 +5,11 @@ from pprint import pprint
 """
 Every Google account has an IAM configuration.
 IAM stands for Identity and Access Management.
-This configuration specifies what the user has access to.  
-The scope (below) lists the APIs that the  program should access in order to run.
-Since our scope variable value will not change, it's known as a constant, 
-and in Python we  write constant variable names in capitals. 
+This configuration specifies what the user has access to.
+The scope (below) lists the APIs that the  program
+should access in order to run.
+Since our scope variable value will not change, it's known as a constant,
+and in Python we  write constant variable names in capitals.
 """
 
 SCOPE = [
@@ -38,11 +39,11 @@ def get_sales_data():
         data_str = input("Enter your data here: ")
 
         sales_data = data_str.split(",")
-        
+
         if validate_data(sales_data):
             print("Data is valid!")
             break
-    
+
     return sales_data
 
 
@@ -75,6 +76,16 @@ def update_sales_worksheet(data):
     print("Sales worksheet updated succesfully.\n")
 
 
+def update_surplus_worksheet(data):
+    """
+    Update surplus worksheet, add new row with the list data provided.
+    """
+    print("Updating surplus worksheet...\n")
+    surplus_worksheet = SHEET.worksheet("surplus")
+    surplus_worksheet.append_row(data)
+    print("Surplus worksheet updated succesfully.\n")
+
+
 def calculate_surplus_data(sales_row):
     """
     Compare sales with stock and calculate the surplus for each item type.
@@ -85,7 +96,7 @@ def calculate_surplus_data(sales_row):
     print("Calculating surplus data...\n")
     stock = SHEET.worksheet("stock").get_all_values()
     stock_row = stock[-1]  # access the last row of data
-    
+
     surplus_data = []
     for stock, sales in zip(stock_row, sales_row):
         surplus = int(stock) - sales
@@ -102,7 +113,7 @@ def main():
     sales_data = [int(num) for num in data]
     update_sales_worksheet(sales_data)
     new_surplus_data = calculate_surplus_data(sales_data)
-    print(new_surplus_data)
+    update_surplus_worksheet(new_surplus_data)
 
 
 print("Welcome to Love Sandwiches Data Automation")

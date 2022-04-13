@@ -2,15 +2,13 @@ import gspread
 from google.oauth2.service_account import Credentials
 from pprint import pprint
 
-"""
-Every Google account has an IAM configuration.
-IAM stands for Identity and Access Management.
-This configuration specifies what the user has access to.
-The scope (below) lists the APIs that the  program
-should access in order to run.
-Since our scope variable value will not change, it's known as a constant,
-and in Python we  write constant variable names in capitals.
-"""
+# Every Google account has an IAM configuration.
+# IAM stands for Identity and Access Management.
+# This configuration specifies what the user has access to.
+# The scope (below) lists the APIs that the  program
+# should access in order to run.
+# Since our scope variable value will not change, it's known as a constant,
+# and in Python we  write constant variable names in capitals.
 
 SCOPE = [
     "https://www.googleapis.com/auth/spreadsheets",
@@ -150,6 +148,24 @@ def calculate_stock_data(data):
     return new_stock_data
 
 
+def get_stock_values(data):
+    """
+    Print out the calculated stock numbers for each sandwich type.
+    """
+    # headings = SHEET.worksheet("stock").get_all_values()[0]
+
+    headings = SHEET.worksheet('stock').row_values(1)
+
+    print("Make the following numbers of sandwiches for next market:\n")
+
+    new_data = {}
+    for heading, stock_num in zip(headings, data):
+        new_data[heading] = stock_num
+    return new_data
+    
+    # return {heading: data for heading, data in zip(headings, data)}
+
+
 def main():
     """
     Run all program functions.
@@ -162,7 +178,8 @@ def main():
     sales_columns = get_last_5_entries_sales()
     stock_data = calculate_stock_data(sales_columns)
     update_worksheet(stock_data, "stock")
-
+    stock_values = get_stock_values(stock_data)
+    print(stock_values)
 
 print("Welcome to Love Sandwiches Data Automation")
 main()
